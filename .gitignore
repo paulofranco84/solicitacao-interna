@@ -3,6 +3,7 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+
 # database files
 *.db
 *.sqlite
@@ -487,3 +488,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Database files
+*.db
+*.db-*
