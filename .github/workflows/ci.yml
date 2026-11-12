@@ -12,6 +12,6 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-      - run: dotnet restore
-      - run: dotnet build --no-restore -c Release
-      - run: dotnet test --no-build -c Release --verbosity normal
+      - run: dotnet restore API_Solicitacoes
+      - run: dotnet build API_Solicitacoes --no-restore -c Release
+      - run: dotnet test API_Solicitacoes.Tests -c Release --verbosity normal
