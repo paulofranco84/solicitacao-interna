@@ -1,17 +1,6 @@
 # Checklist CI e segurança · quinta
 
 
-## Testes locais (CI)
-
-```bash
-dotnet restore .\API_Solicitacoes\
-dotnet build .\API_Solicitacoes\  
-dotnet test .\API_Solicitacoes.Tests\ --no-build
-```
-
-Pipeline: `.github/workflows/ci.yml`
-
-
 
 | Item                                                           | ok? |
 | -------------------------------------------------------------- | --- |
