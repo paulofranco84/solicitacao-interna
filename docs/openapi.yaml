@@ -2,11 +2,154 @@ openapi: 3.0.3
 info:
   title: Solicitacoes CAIXA
   version: 0.1.0
+  description: |
+    API de criacao de solicitacoes internas, em ASP.NET Core .NET 8 e SQLite.
+    As rotas atuais nao exigem autenticacao. Nao ha consulta por id ou idempotencia.
+    Esta especificacao estatica e mantida separadamente do Swagger gerado.
+servers:
+  - url: http://localhost:5245
+    description: Execucao local com o perfil http
+tags:
+  - name: Health
+    description: Disponibilidade do processo da API
+  - name: Solicitacoes
+    description: Cadastro de solicitacoes internas
 paths:
+  /health:
+    get:
+      tags: [Health]
+      operationId: VerificarHealth
+      summary: Verifica se a API esta em execucao (liveness)
+      description: Nao consulta o SQLite nem verifica dependencias.
+      security: []
+      responses:
+        '200':
+          description: API em execucao; nao verifica dependencias
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Healthy
   /solicitacoes:
     post:
+      tags: [Solicitacoes]
+      operationId: CriarSolicitacao
+      summary: Cria uma solicitacao interna
+      description: |
+        Descricao e categoria sao obrigatorias e nao podem conter somente espacos.
+        Os valores sao persistidos sem trim. Cada POST valido cria um novo registro,
+        mesmo quando o payload e repetido. Nao retorna Location e nao ha GET por id.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntradaSolicitacao'
+            examples:
+              valido:
+                summary: Dados ficticios validos
+                value:
+                  descricao: Smoke ficticio - solicitar material para o Hack
+                  categoria: Teste
+              semCategoria:
+                summary: Dados ficticios invalidos - retorna 400
+                value:
+                  descricao: Smoke ficticio - solicitar material para o Hack
       responses:
         '201':
-          description: criado
+          description: Solicitacao persistida; identificador gerado pelo SQLite
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaidaSolicitacao'
+              example:
+                id: 1
         '400':
-          description: invalido
+          description: |
+            Campos obrigatorios invalidos ou erro de model binding.
+            Nenhuma solicitacao e criada. Mensagens de model binding variam
+            conforme o erro e sao definidas pelo ASP.NET Core.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+              examples:
+                semCategoria:
+                  summary: Categoria obrigatoria nao informada
+                  value:
+                    type: https://tools.ietf.org/html/rfc9110#section-15.5.1
+                    title: One or more validation errors occurred.
+                    status: 400
+                    errors:
+                      categoria:
+                        - "A categoria é obrigatória."
+                    traceId: identificador-da-requisicao
+                semDescricao:
+                  summary: Descricao obrigatoria nao informada
+                  value:
+                    type: https://tools.ietf.org/html/rfc9110#section-15.5.1
+                    title: One or more validation errors occurred.
+                    status: 400
+                    errors:
+                      descricao:
+                        - "A descrição é obrigatória."
+                    traceId: identificador-da-requisicao
+        '415':
+          description: Tipo de conteudo nao suportado pelo model binding
+components:
+  schemas:
+    EntradaSolicitacao:
+      type: object
+      required: [descricao, categoria]
+      properties:
+        descricao:
+          type: string
+          minLength: 1
+          pattern: '\S'
+          description: Descricao obrigatoria; nao aceita null ou somente espacos
+          example: Smoke ficticio - solicitar material para o Hack
+        categoria:
+          type: string
+          minLength: 1
+          pattern: '\S'
+          description: Categoria obrigatoria, sem lista fechada de valores
+          example: Teste
+    SaidaSolicitacao:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Identificador gerado pelo banco
+          example: 1
+    ValidationProblemDetails:
+      type: object
+      required: [status, errors]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          enum: [400]
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+        errors:
+          type: object
+          description: Campo ou chave de model binding associado as mensagens
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        traceId:
+          type: string
+          description: Identificador de rastreamento da requisicao; valor variavel
