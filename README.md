@@ -6,14 +6,23 @@ Desafio CAIXA para criação de uma API de solicitações internas.
 ## Integrantes do grupo
 
 Thomas Gonzalez Miranda - c136762
+
 Gabriel Marco de Souza e Silva - c118025
+
 Janete Marilu Alves Boulhosa - c080459
+
 Edinaldo do Nascimento Baiao - c141703
+
 Pablo Vital Rodrigues de Andrade - c130883
+
 Luiz Augusto de Oliveira Carvalho Silva - c079610
+
 Ester Urbinati de Souza Dias - c134634
+
 Paulo Henrique Zuliani Franco - c141101
+
 Paulo Henrique dos Santos - c109563
+
 Henrique Araujo Porto - c158493
 
 ## Visão geral
