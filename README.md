@@ -2,15 +2,30 @@
 
 Desafio CAIXA para criação de uma API de solicitações internas.
 
+
+## Integrantes do grupo
+
+Thomas Gonzalez Miranda - c136762
+Gabriel Marco de Souza e Silva - c118025
+Janete Marilu Alves Boulhosa - c080459
+Edinaldo do Nascimento Baiao - c141703
+Pablo Vital Rodrigues de Andrade - c130883
+Luiz Augusto de Oliveira Carvalho Silva - c079610
+Ester Urbinati de Souza Dias - c134634
+Paulo Henrique Zuliani Franco - c141101
+Paulo Henrique dos Santos - c109563
+Henrique Araujo Porto - c158493
+
 ## Visão geral
 
 API HTTP em ASP.NET Core (.NET 8) para cadastrar solicitações internas,
 com persistência em SQLite via Entity Framework Core.
 
-| Método | Rota | Finalidade | Resposta de sucesso |
-| --- | --- | --- | --- |
-| `GET` | `/health` | Verificar se a API está em execução | `200 Healthy` |
-| `POST` | `/solicitacoes` | Criar uma solicitação interna | `201` com o identificador |
+
+| Método | Rota            | Finalidade                             | Resposta de sucesso       |
+| ------- | --------------- | -------------------------------------- | ------------------------- |
+| `GET`   | `/health`       | Verificar se a API está em execução | `200 Healthy`             |
+| `POST`  | `/solicitacoes` | Criar uma solicitação interna        | `201` com o identificador |
 
 URL local com o perfil `http`: `http://localhost:5245`.
 As rotas atuais não exigem token nem cabeçalhos de autenticação. Não há endpoints
@@ -20,8 +35,8 @@ Documentação do contrato:
 
 - [OpenAPI 3.0.3](docs/openapi.yaml): especificação estática com schemas e exemplos.
 - [Especificação funcional](docs/especificacao.md): regras e critérios de aceite.
-- Swagger interativo em `Development`: <http://localhost:5245/swagger>.
-- JSON gerado pelo Swagger em `Development`: <http://localhost:5245/swagger/v1/swagger.json>.
+- Swagger interativo em `Development`: [http://localhost:5245/swagger](http://localhost:5245/swagger).
+- JSON gerado pelo Swagger em `Development`: [http://localhost:5245/swagger/v1/swagger.json](http://localhost:5245/swagger/v1/swagger.json).
 
 O identificador `v1` do Swagger nomeia o documento; não existe prefixo `/v1`
 nas rotas. O YAML é mantido separadamente, não é carregado pela aplicação.
@@ -32,10 +47,11 @@ nas rotas. O YAML é mantido separadamente, não é carregado pela aplicação.
 
 Cria uma solicitação. Envie um corpo JSON com `Content-Type: application/json`.
 
-| Campo | Tipo | Obrigatório | Regra |
-| --- | --- | --- | --- |
-| `descricao` | string | Sim | Não pode ser ausente, `null`, vazio ou conter somente espaços em branco |
-| `categoria` | string | Sim | Não pode ser ausente, `null`, vazio ou conter somente espaços em branco |
+
+| Campo       | Tipo   | Obrigatório | Regra                                                                    |
+| ----------- | ------ | ------------ | ------------------------------------------------------------------------ |
+| `descricao` | string | Sim          | Não pode ser ausente,`null`, vazio ou conter somente espaços em branco |
+| `categoria` | string | Sim          | Não pode ser ausente,`null`, vazio ou conter somente espaços em branco |
 
 Não há lista fechada de categorias nem limite de tamanho definido pela aplicação.
 Os valores aceitos são gravados como recebidos, sem remover espaços nas extremidades.
@@ -170,7 +186,7 @@ dotnet run --project .\API_Solicitacoes --no-build -c Release --launch-profile h
 
 Aguarde `Now listening on: http://localhost:5245`. Mantenha esse terminal aberto.
 O perfil `http` define a porta **5245** e o ambiente `Development`.
-Swagger: <http://localhost:5245/swagger>.
+Swagger: [http://localhost:5245/swagger](http://localhost:5245/swagger).
 
 O banco padrão fica em `API_Solicitacoes\solicitacoes.db`. Cada smoke válido grava
 uma solicitação fictícia; não execute contra ambiente ou banco de produção.
@@ -227,16 +243,17 @@ Foi usado um SQLite temporário isolado via `ConnectionStrings__Solicitacoes`,
 sem alterar o banco padrão. A API foi parada e o banco temporário removido
 ao terminar.
 
-| Verificação | Evidência |
-| --- | --- |
-| Build Release | Sucesso, 0 avisos e 0 erros |
-| Testes | 7 aprovados, incluindo health, persistência do POST válido e ausência de gravação nos casos inválidos |
-| Porta | `http://localhost:5245` |
-| Health | `GET /health` → `200`, `text/plain`, corpo `Healthy` |
-| Fluxo válido | Dados fictícios do smoke acima → `POST /solicitacoes` → `201`, `application/json`, corpo `{"id":1}` |
-| Fluxo inválido | Categoria ausente → `400`, `application/problem+json`, `status: 400`, `errors.categoria: ["A categoria é obrigatória."]` |
-| Swagger | `GET /swagger/v1/swagger.json` → `200`, rota POST presente |
-| Actions consultado hoje | Última execução de `main`: [run 7](https://github.com/paulofranco84/solicitacao-interna/actions/runs/43287219855), `success`, em **12/11/2026**, commit `dfd66e6` |
+
+| Verificação           | Evidência                                                                                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build Release           | Sucesso, 0 avisos e 0 erros                                                                                                                                         |
+| Testes                  | 7 aprovados, incluindo health, persistência do POST válido e ausência de gravação nos casos inválidos                                                         |
+| Porta                   | `http://localhost:5245`                                                                                                                                             |
+| Health                  | `GET /health` → `200`, `text/plain`, corpo `Healthy`                                                                                                               |
+| Fluxo válido           | Dados fictícios do smoke acima →`POST /solicitacoes` → `201`, `application/json`, corpo `{"id":1}`                                                               |
+| Fluxo inválido         | Categoria ausente →`400`, `application/problem+json`, `status: 400`, `errors.categoria: ["A categoria é obrigatória."]`                                          |
+| Swagger                 | `GET /swagger/v1/swagger.json` → `200`, rota POST presente                                                                                                         |
+| Actions consultado hoje | Última execução de`main`: [run 7](https://github.com/paulofranco84/solicitacao-interna/actions/runs/43287219855), `success`, em **12/11/2026**, commit `dfd66e6` |
 
 **Pendências:**
 
