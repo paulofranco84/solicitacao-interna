@@ -21,6 +21,7 @@ builder.Services.AddDbContext<SolicitacoesDbContext>((services, options) =>
     options.UseSqlite(connectionString.ToString());
 });
 builder.Services.AddScoped<ISolicitacaoService, SolicitacaoService>();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -42,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapHealthChecks("/health");
 app.MapControllers();
 await app.RunAsync();
 

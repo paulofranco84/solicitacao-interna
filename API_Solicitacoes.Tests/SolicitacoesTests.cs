@@ -19,6 +19,16 @@ public sealed class SolicitacoesTests : IDisposable
     }
 
     [Fact]
+    public async Task Health_ApiEmExecucao_Retorna200Healthy()
+    {
+        using var response = await _client.GetAsync("/health");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("text/plain", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("Healthy", await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
     public async Task Criar_DadosValidos_Retorna201EPersisteSolicitacao()
     {
         var response = await _client.PostAsJsonAsync("/solicitacoes", new

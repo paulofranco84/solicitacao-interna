@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:5245
+
+### Health: 200 com Healthy
+GET {{baseUrl}}/health
+
+### Criacao com dados ficticios: 201 com id positivo
+POST {{baseUrl}}/solicitacoes
+Content-Type: application/json
+
+{
+  "descricao": "Smoke ficticio - solicitar material para o Hack",
+  "categoria": "Teste"
+}
+
+### Categoria ausente: 400 com errors.categoria
+POST {{baseUrl}}/solicitacoes
+Content-Type: application/json
+
+{
+  "descricao": "Smoke ficticio - solicitar material para o Hack"
+}
